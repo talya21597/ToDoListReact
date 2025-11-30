@@ -20,12 +20,18 @@ export default {
   },
 
   addTask: async(name) => {
-    console.log('addTask', name);
-    const result = await axios.post('/items', {
-      name: name,
-      iscomplete: false
-    });
-    return result.data;
+    console.log('addTask called with:', name);
+    try {
+      const result = await axios.post('/items', {
+        name: name,
+        iscomplete: false
+      });
+      console.log('✅ addTask response:', result.data);
+      return result.data;
+    } catch (error) {
+      console.error('❌ addTask error:', error.response?.data || error.message);
+      throw error;
+    }
   },
 
   setCompleted: async(id, iscomplete) => {
