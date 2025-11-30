@@ -11,6 +11,11 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // MySQL Connection Pool
+console.log('Connecting to MySQL...');
+console.log('DB_HOST:', process.env.DB_HOST || 'bkzmi4mvr8trijqwb9a63-mysql.services.clever-cloud.com');
+console.log('DB_USER:', process.env.DB_USER || 'u6c9gtkmoscoy44j');
+console.log('DB_NAME:', process.env.DB_NAME || 'bkzmi4mvr8trijqwb9a63');
+
 const pool = mysql.createPool({
   host: process.env.DB_HOST || 'bkzmi4mvr8trijqwb9a63-mysql.services.clever-cloud.com',
   user: process.env.DB_USER || 'u6c9gtkmoscoy44j',
@@ -21,6 +26,15 @@ const pool = mysql.createPool({
   connectionLimit: 10,
   queueLimit: 0
 });
+
+pool.getConnection()
+  .then(conn => {
+    console.log('✅ MySQL connection successful!');
+    conn.release();
+  })
+  .catch(err => {
+    console.error('❌ MySQL connection failed:', err.message);
+  });
 
 // GET all items
 app.get('/items', async (req, res) => {
