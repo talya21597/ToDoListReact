@@ -135,22 +135,6 @@ app.delete('/items/:id', async (req, res) => {
   }
 });
 
-// Test endpoint - לבדיקה בלבד
-app.get('/test-insert', async (req, res) => {
-  try {
-    console.log('Test INSERT endpoint called');
-    const result = await pool.query(
-      'INSERT INTO items (name, iscomplete) VALUES ($1, $2) RETURNING *',
-      ['Test Item from API', false]
-    );
-    console.log('✅ Test INSERT successful:', result.rows[0]);
-    res.json({ success: true, data: result.rows[0] });
-  } catch (error) {
-    console.error('❌ Test INSERT failed:', error.message);
-    res.status(500).json({ error: error.message });
-  }
-});
-
 // Start server
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
