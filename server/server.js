@@ -54,12 +54,15 @@ pool.query(createTableQuery)
 // GET all items
 app.get('/items', async (req, res) => {
   try {
-    console.log('GET /items');
+    console.log('GET /items - Executing query: SELECT * FROM items ORDER BY id ASC');
     const result = await pool.query('SELECT * FROM items ORDER BY id ASC');
+    console.log('✅ Query result rows:', result.rows.length, 'items');
+    console.log('✅ Data:', JSON.stringify(result.rows));
     res.json(result.rows);
   } catch (error) {
-    console.error('Database error:', error);
-    res.status(500).json({ error: 'Database error' });
+    console.error('❌ Database error in GET:', error.message);
+    console.error('Full error:', error);
+    res.status(500).json({ error: 'Database error', message: error.message });
   }
 });
 
