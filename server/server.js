@@ -22,10 +22,16 @@ const pool = new Pool({
 pool.connect()
   .then(client => {
     console.log('✅ PostgreSQL connection successful!');
+    console.log('Connection details:', {
+      host: client.host,
+      database: client.database,
+      user: client.user
+    });
     client.release();
   })
   .catch(err => {
     console.error('❌ PostgreSQL connection failed:', err.message);
+    console.error('Full error:', err);
   });
 
 // Create table if it doesn't exist
@@ -61,17 +67,23 @@ app.get('/items', async (req, res) => {
 app.post('/items', async (req, res) => {
   try {
     const { name, iscomplete } = req.body;
-    console.log('POST /items', { name, iscomplete });
+    console.log('POST /items received:', { name, iscomplete });
+    
+    if (!name) {
+      return res.status(400).json({ error: 'Name is required' });
+    }
     
     const result = await pool.query(
       'INSERT INTO items (name, iscomplete) VALUES ($1, $2) RETURNING *',
       [name, iscomplete || false]
     );
     
+    console.log('Item inserted successfully:', result.rows[0]);
     res.status(201).json(result.rows[0]);
   } catch (error) {
-    console.error('Database error:', error);
-    res.status(500).json({ error: 'Database error' });
+    console.error('❌ Database error on POST:', error.message);
+    console.error('Full error:', error);
+    res.status(500).json({ error: 'Database error', details: error.message });
   }
 });
 
