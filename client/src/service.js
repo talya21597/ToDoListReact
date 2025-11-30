@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 // Config Defaults - הגדרת כתובת ברירת מחדל
-axios.defaults.baseURL = "http://localhost:5000";
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:5000";
+axios.defaults.baseURL = API_URL;
 
 // Response Interceptor - תפיסת שגיאות ורישום ללוג
 axios.interceptors.response.use(
