@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 // PostgreSQL Connection Pool
 console.log('Connecting to PostgreSQL...');
 const pool = new Pool({
-  connectionString: process.env.DATABASE_URL,
+  connectionString: process.env.DATABASE_URL_,
   ssl: {
     rejectUnauthorized: false
   }
