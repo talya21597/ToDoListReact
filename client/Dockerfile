@@ -11,10 +11,7 @@ RUN npm install
 
 COPY . .
 
-# Build the React app with API URL environment variable
-ARG REACT_APP_API_URL=https://todolistreactapi-0v4z.onrender.com
-ENV REACT_APP_API_URL=${REACT_APP_API_URL}
-
+# Build the React app
 RUN npm run build
 
 # Stage 2: Serve with nginx
