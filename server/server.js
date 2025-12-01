@@ -14,7 +14,6 @@ app.use(cors({
 app.use(bodyParser.json());
 
 // PostgreSQL Connection Pool
-console.log('Connecting to PostgreSQL...');
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: {
@@ -24,17 +23,11 @@ const pool = new Pool({
 
 pool.connect()
   .then(client => {
-    console.log('✅ PostgreSQL connection successful!');
-    console.log('Connection details:', {
-      host: client.host,
-      database: client.database,
-      user: client.user
-    });
+    console.log('✅ DB connected');
     client.release();
   })
   .catch(err => {
-    console.error('❌ PostgreSQL connection failed:', err.message);
-    console.error('Full error:', err);
+    console.error('❌ DB connection failed:', err.message);
   });
 
 // Create table if it doesn't exist
@@ -48,24 +41,20 @@ const createTableQuery = `
 
 pool.query(createTableQuery)
   .then(() => {
-    console.log('✅ Items table ready!');
+    console.log('✅ Table ready');
   })
   .catch(err => {
-    console.error('❌ Error creating table:', err.message);
+    console.error('❌ Table error:', err.message);
   });
 
 // GET all items
 app.get('/items', async (req, res) => {
   try {
-    console.log('GET /items - Executing query: SELECT * FROM items ORDER BY id ASC');
     const result = await pool.query('SELECT * FROM items ORDER BY id ASC');
-    console.log('✅ Query result rows:', result.rows.length, 'items');
-    console.log('✅ Data:', JSON.stringify(result.rows));
     res.json(result.rows);
   } catch (error) {
-    console.error('❌ Database error in GET:', error.message);
-    console.error('Full error:', error);
-    res.status(500).json({ error: 'Database error', message: error.message });
+    console.error('❌ GET error:', error.message);
+    res.status(500).json({ error: 'Database error' });
   }
 });
 
@@ -73,7 +62,6 @@ app.get('/items', async (req, res) => {
 app.post('/items', async (req, res) => {
   try {
     const { name, iscomplete } = req.body;
-    console.log('POST /items received:', { name, iscomplete });
     
     if (!name) {
       return res.status(400).json({ error: 'Name is required' });
@@ -84,12 +72,10 @@ app.post('/items', async (req, res) => {
       [name, iscomplete || false]
     );
     
-    console.log('Item inserted successfully:', result.rows[0]);
     res.status(201).json(result.rows[0]);
   } catch (error) {
-    console.error('❌ Database error on POST:', error.message);
-    console.error('Full error:', error);
-    res.status(500).json({ error: 'Database error', details: error.message });
+    console.error('❌ POST error:', error.message);
+    res.status(500).json({ error: 'Database error' });
   }
 });
 
@@ -98,7 +84,6 @@ app.put('/items/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     const { iscomplete } = req.body;
-    console.log('PUT /items/:id', { id, iscomplete });
     
     const result = await pool.query(
       'UPDATE items SET iscomplete = $1 WHERE id = $2 RETURNING *',
@@ -111,7 +96,7 @@ app.put('/items/:id', async (req, res) => {
     
     res.json(result.rows[0]);
   } catch (error) {
-    console.error('Database error:', error);
+    console.error('❌ PUT error:', error.message);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -120,7 +105,6 @@ app.put('/items/:id', async (req, res) => {
 app.delete('/items/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    console.log('DELETE /items/:id', { id });
     
     const result = await pool.query(
       'DELETE FROM items WHERE id = $1 RETURNING *',
@@ -133,7 +117,7 @@ app.delete('/items/:id', async (req, res) => {
     
     res.json({ success: true });
   } catch (error) {
-    console.error('Database error:', error);
+    console.error('❌ DELETE error:', error.message);
     res.status(500).json({ error: 'Database error' });
   }
 });
