@@ -8,7 +8,7 @@ services:
     ports:
       - "5000:5000"
     environment:
-      - DATABASE_URL=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-todolist}
+      - DATABASE_URL_=postgresql://${DB_USER:-postgres}:${DB_PASSWORD:-postgres}@postgres:5432/${DB_NAME:-todolist}
       - PORT=5000
     depends_on:
       - postgres
