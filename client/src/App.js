@@ -64,7 +64,7 @@ function App() {
             return (
               <li className={todo.iscomplete ? "completed" : ""} key={todo.id}>
                 <div className="view">
-                  <input className="toggle" type="checkbox" defaultChecked={todo.iscomplete} onChange={(e) => updateCompleted(todo, e.target.checked)} />
+                  <input className="toggle" type="checkbox" checked={todo.iscomplete} onChange={(e) => updateCompleted(todo, e.target.checked)} />
                   <label>{todo.name}</label>
                   <button className="destroy" onClick={() => deleteTodo(todo.id)}></button>
                 </div>

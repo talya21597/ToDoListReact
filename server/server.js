@@ -8,7 +8,7 @@ const PORT = process.env.PORT || 5000;
 
 // Middleware
 app.use(cors({
-  origin: ['http://localhost:3000', 'http://localhost', 'http://localhost:80', 'https://todolistreactclient-edde.onrender.com'],
+  origin: ['http://localhost:3000', 'http://localhost:80', 'http://127.0.0.1:3000', 'https://todolistreactclient-edde.onrender.com', 'https://todolistreactapi-0v4z.onrender.com'],
   credentials: true
 }));
 app.use(bodyParser.json());
