@@ -15,8 +15,13 @@ axios.interceptors.response.use(
 
 export default {
   getTasks: async () => {
-    const result = await axios.get('/items');    
-    return result.data;
+    try {
+      const result = await axios.get('/items');    
+      return result.data;
+    } catch (error) {
+      console.error('❌ getTasks error:', error.message);
+      throw error;
+    }
   },
 
   addTask: async(name) => {
@@ -36,15 +41,25 @@ export default {
 
   setCompleted: async(id, iscomplete) => {
     console.log('setCompleted', {id, iscomplete});
-    const result = await axios.put(`/items/${id}`, {
-      iscomplete: iscomplete
-    });
-    return result.data;
+    try {
+      const result = await axios.put(`/items/${id}`, {
+        iscomplete: iscomplete
+      });
+      return result.data;
+    } catch (error) {
+      console.error('❌ setCompleted error:', error.response?.data || error.message);
+      throw error;
+    }
   },
 
   deleteTask: async(id) => {
     console.log('deleteTask', id);
-    await axios.delete(`/items/${id}`);
+    try {
+      await axios.delete(`/items/${id}`);
+    } catch (error) {
+      console.error('❌ deleteTask error:', error.response?.data || error.message);
+      throw error;
+    }
   }
 };
 

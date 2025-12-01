@@ -6,25 +6,44 @@ function App() {
   const [todos, setTodos] = useState([]);
 
   async function getTodos() {
-    const todos = await service.getTasks();
-    setTodos(todos);
+    try {
+      const todos = await service.getTasks();
+      setTodos(todos);
+    } catch (error) {
+      console.error('Failed to load todos:', error);
+    }
   }
 
   async function createTodo(e) {
     e.preventDefault();
-    await service.addTask(newTodo);
-    setNewTodo("");//clear input
-    await getTodos();//refresh tasks list (in order to see the new one)
+    try {
+      if (!newTodo.trim()) {
+        return;
+      }
+      await service.addTask(newTodo);
+      setNewTodo("");
+      await getTodos();
+    } catch (error) {
+      console.error('Failed to create todo:', error);
+    }
   }
 
   async function updateCompleted(todo, iscomplete) {
-    await service.setCompleted(todo.id, iscomplete);
-    await getTodos();//refresh tasks list (in order to see the updated one)
+    try {
+      await service.setCompleted(todo.id, iscomplete);
+      await getTodos();
+    } catch (error) {
+      console.error('Failed to update todo:', error);
+    }
   }
 
   async function deleteTodo(id) {
-    await service.deleteTask(id);
-    await getTodos();//refresh tasks list
+    try {
+      await service.deleteTask(id);
+      await getTodos();
+    } catch (error) {
+      console.error('Failed to delete todo:', error);
+    }
   }
 
   useEffect(() => {
