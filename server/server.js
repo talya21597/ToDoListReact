@@ -7,7 +7,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin: ['http://localhost:3000', 'http://localhost', 'http://localhost:80', 'https://todolistreactclient-edde.onrender.com'],
+  credentials: true
+}));
 app.use(bodyParser.json());
 
 // PostgreSQL Connection Pool
