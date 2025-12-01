@@ -56,9 +56,15 @@ npm install
 ```
 
 4. Set up environment variables
-   - Create `.env` file in root directory with:
+
+   **For Server** - Create `server/.env`:
    ```
-   DATABASE_URL_=your_postgresql_connection_string
+   DATABASE_URL_=postgresql://user:password@localhost:5432/todolist
+   PORT=5000
+   ```
+
+   **For Client** - Create `client/.env`:
+   ```
    REACT_APP_API_URL=http://localhost:5000
    ```
 
@@ -84,14 +90,29 @@ git clone https://github.com/talya21597/ToDoListReact.git
 cd ToDoListReact
 ```
 
-2. Build and run with Docker Compose
+2. Create `.env` file in root directory (for local Docker Compose):
+```bash
+DATABASE_URL_=postgresql://postgres:postgres@postgres:5432/todolist
+DB_USER=postgres
+DB_PASSWORD=postgres
+DB_NAME=todolist
+REACT_APP_API_URL=http://localhost:5000
+```
+
+3. Build and run with Docker Compose
 ```bash
 docker-compose up --build
 ```
 
-- Server: `http://localhost:5000`
-- Client: `http://localhost:80`
-- PostgreSQL: `localhost:5432`
+This will start:
+- **Server**: `http://localhost:5000`
+- **Client**: `http://localhost:80`
+- **PostgreSQL**: `localhost:5432`
+
+4. To stop all containers:
+```bash
+docker-compose down
+```
 
 ## Features
 
@@ -125,16 +146,33 @@ The server provides the following REST API endpoints:
 
 ## Environment Variables
 
-### Server (`server/.env` or Render settings)
+### Server
+
+**For local development** (`server/.env`):
 ```
-DATABASE_URL_=postgresql://user:password@host:port/database
+DATABASE_URL_=postgresql://user:password@localhost:5432/todolist
 PORT=5000
 ```
 
-### Client (`client/.env` or Render settings)
+**For Render deployment** (set in Render Dashboard):
+```
+DATABASE_URL_=<your-render-postgres-connection-string>
+PORT=5000
+```
+
+### Client
+
+**For local development** (`client/.env`):
+```
+REACT_APP_API_URL=http://localhost:5000
+```
+
+**For Render deployment** (set in Render Dashboard):
 ```
 REACT_APP_API_URL=https://your-server-url.onrender.com
 ```
+
+**Important**: Environment variables starting with `REACT_APP_` are embedded in the build. Any changes require a rebuild/redeploy.
 
 ## Deployment on Render
 
